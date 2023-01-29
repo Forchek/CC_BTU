@@ -8,6 +8,9 @@ public class Mov_BTU : MonoBehaviour
     private Vector2 Mov = new Vector2(0, 0);
     private Rigidbody2D rb;
     private SpriteRenderer sr;
+    private bool jumping = false;
+    private bool GoingUp = false;
+    private float AlturaSalto = 0f;
 
     public Transform CameraPos;
     // Start is called before the first frame update
@@ -42,11 +45,42 @@ public class Mov_BTU : MonoBehaviour
         {
             Mov.y = 0;
         }
+
+        if(Input.GetButtonDown("Jump"))
+        {
+            jumping = true;
+            GoingUp = true;
+            AlturaSalto = transform.position.y + 2f;
+        }
     }
 
     private void Moving()
     {
         rb.velocity = Mov.normalized * Speed;
+
+        //Salto
+        if(jumping == true)
+        {
+            if(GoingUp == true)
+            {
+                transform.position = Vector2.Lerp(transform.position, new Vector2(transform.position.x, AlturaSalto), Time.deltaTime * 5);
+                if (transform.position.y >= AlturaSalto - 0.2)
+                {
+                    GoingUp = false;
+                    AlturaSalto = transform.position.y - 2f;
+                }
+            }
+            else
+            {
+                transform.position = Vector2.Lerp(transform.position, new Vector2(transform.position.x, AlturaSalto), Time.deltaTime * 5);
+                if (transform.position.y <= AlturaSalto + 0.2)
+                {
+                    Debug.Log("En Suelo: " + AlturaSalto);
+                    jumping = false;
+                }
+            }
+        }
+
     }
 
     private void ChangeRenderOrder()
