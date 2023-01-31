@@ -11,6 +11,7 @@ public class Mov_BTU : MonoBehaviour
     private bool jumping = false;
     private bool GoingUp = false;
     private float AlturaSalto = 0f;
+    private float PosCaida = 0f;
 
     public Transform CameraPos;
     // Start is called before the first frame update
@@ -51,31 +52,38 @@ public class Mov_BTU : MonoBehaviour
             jumping = true;
             GoingUp = true;
             AlturaSalto = transform.position.y + 2f;
+            PosCaida = transform.position.y;
         }
     }
 
     private void Moving()
     {
-        rb.velocity = Mov.normalized * Speed;
+        if(jumping == false)
+        {
+            transform.Translate(Mov.normalized * Speed * Time.deltaTime);
+        }
+        else
+        {
+            transform.Translate(new Vector2(Mov.x,0) * Speed * Time.deltaTime);
+            PosCaida += Mov.y * Time.deltaTime/2f;
+        }
 
         //Salto
         if(jumping == true)
         {
             if(GoingUp == true)
             {
-                transform.position = Vector2.Lerp(transform.position, new Vector2(transform.position.x, AlturaSalto), Time.deltaTime * 5);
-                if (transform.position.y >= AlturaSalto - 0.2)
+                transform.Translate(Vector2.up *Time.deltaTime * 5);
+                if (transform.position.y >= AlturaSalto)
                 {
                     GoingUp = false;
-                    AlturaSalto = transform.position.y - 2f;
                 }
             }
             else
             {
-                transform.position = Vector2.Lerp(transform.position, new Vector2(transform.position.x, AlturaSalto), Time.deltaTime * 5);
-                if (transform.position.y <= AlturaSalto + 0.2)
+                transform.Translate(Vector2.down * Time.deltaTime * 5);
+                if (transform.position.y <= PosCaida)
                 {
-                    Debug.Log("En Suelo: " + AlturaSalto);
                     jumping = false;
                 }
             }
@@ -101,7 +109,7 @@ public class Mov_BTU : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("CHOCANDO");
+        //Debug.Log("CHOCANDO");
     }
 
 }
