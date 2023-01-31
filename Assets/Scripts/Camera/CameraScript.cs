@@ -36,7 +36,7 @@ public class CameraScript : MonoBehaviour
         }
         else if (PjPos.position.y >= (transform.position.y ) && (transform.position.y < CameraTopeArriba))
         {
-            transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, PjPos.position.y, transform.position.z), Time.deltaTime*8);
+            transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, PjPos.position.y, transform.position.z), Time.deltaTime*10);
         }
         else if (PjPos.position.y <= (transform.position.y - 0.5) && (transform.position.y > CameraTopeAbajo))
         {
