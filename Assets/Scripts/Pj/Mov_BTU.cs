@@ -13,6 +13,8 @@ public class Mov_BTU : MonoBehaviour
     private float AlturaSalto = 0f;
     private float PosCaida = 0f;
 
+    public bool AttackT = false;
+    public bool AttackY = false;
     public Transform CameraPos;
     // Start is called before the first frame update
     void Start()
@@ -38,7 +40,7 @@ public class Mov_BTU : MonoBehaviour
         Mov.x = Input.GetAxis("Horizontal");
         Mov.y = Input.GetAxis("Vertical");
 
-        if(((transform.position.x >= (CameraPos.position.x + 8.3)) && Mov.x > 0) || ((transform.position.x <= (CameraPos.position.x - 8.3)) && Mov.x < 0))
+        if (((transform.position.x >= (CameraPos.position.x + 8.3)) && Mov.x > 0) || ((transform.position.x <= (CameraPos.position.x - 8.3)) && Mov.x < 0))
         {
             Mov.x = 0;
         }
@@ -47,12 +49,16 @@ public class Mov_BTU : MonoBehaviour
             Mov.y = 0;
         }
 
-        if(Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump"))
         {
             jumping = true;
             GoingUp = true;
             AlturaSalto = transform.position.y + 2f;
             PosCaida = transform.position.y;
+        }
+        else if (Input.GetKeyDown(KeyCode.T))
+        {
+            AttackT = true;
         }
     }
 
@@ -107,9 +113,11 @@ public class Mov_BTU : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    //Se ejecuta en el primer frame del ataque
+    void EliminateAttackBool()
     {
-        //Debug.Log("CHOCANDO");
+        AttackT = false;
+        AttackY = false;
     }
 
 }
