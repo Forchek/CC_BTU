@@ -516,6 +516,7 @@ GameObject:
   - component: {fileID: 1348989971}
   - component: {fileID: 1348989978}
   - component: {fileID: 1348989977}
+  - component: {fileID: 1348989979}
   m_Layer: 0
   m_Name: Pj_1
   m_TagString: Player
@@ -537,6 +538,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AttackT: 0
   AttackY: 0
+  Hability: 0
+  Inmunity: 0
   CameraPos: {fileID: 519420032}
 --- !u!50 &1348989972
 Rigidbody2D:
@@ -619,7 +622,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1348989970}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.69, y: -2.12, z: 0}
+  m_LocalPosition: {x: -1.76, y: -2.12, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -663,9 +666,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1348989970}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30dd15abb84dc4a48abc0a632d281eb7, type: 3}
+  m_Script: {fileID: 11500000, guid: 7987ddfeaad72374d8a1d01b7e99ac81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MaxVida: 0
+  Vida: 0
+  "Da\xF1o": 0
 --- !u!114 &1348989978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -678,7 +684,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90612fa8cfaae154e80c7623f703abb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RadAtck: {fileID: 0}
+  RadAtck: {fileID: 349441308}
+--- !u!95 &1348989979
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1348989970}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 099c70eac31547649ba8e0bc02fd1eda, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!1 &1787470534
 GameObject:
   m_ObjectHideFlags: 0

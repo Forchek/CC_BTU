@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AtackControl : MonoBehaviour
+public class AtackControl_1PJ : MonoBehaviour
 {
     private Mov_BTU MovPj;
     private char NextAttack = 'N';

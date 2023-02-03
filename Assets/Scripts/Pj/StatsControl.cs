@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class StatsControl : MonoBehaviour
 {
+    private Mov_BTU Mov_Pj;
     // Start is called before the first frame update
     public int MaxVida;
     public int Vida;
@@ -18,14 +19,17 @@ public class StatsControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        Mov_Pj = GetComponent<Mov_BTU>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.tag == "AtackEnemy")
         {
-            Vida -= collision.GetComponent<StatsControl>().Daño;
+            if (Mov_Pj.Inmunity == false)
+            {
+                Vida -= collision.GetComponent<StatsControl>().Daño;
+            }
         }
     }
 }
