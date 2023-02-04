@@ -6,7 +6,6 @@ public class Mov_BTU : MonoBehaviour
 {
     private int Speed = 6;
     private Vector2 Mov = new Vector2(0, 0);
-    private Rigidbody2D rb;
     private SpriteRenderer sr;
     private Animator Anim;
     private bool jumping = false;
@@ -25,7 +24,6 @@ public class Mov_BTU : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         Anim = GetComponent<Animator>();
     }
@@ -56,9 +54,13 @@ public class Mov_BTU : MonoBehaviour
                 AlturaSalto = transform.position.y + 2f;
                 PosCaida = transform.position.y;
             }
-            else if (Input.GetKeyDown(KeyCode.T))
+            else if (Input.GetKeyDown(KeyCode.T) && (AttackT == false || AttackT == false))
             {
                 AttackT = true;
+            }
+            else if (Input.GetKeyDown(KeyCode.Y) && (AttackT == false || AttackT == false))
+            {
+                AttackY = true;
             }
             else if (Input.GetKeyDown(KeyCode.U) && (Hability == false))
             {

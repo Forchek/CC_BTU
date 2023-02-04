@@ -5,6 +5,7 @@ using UnityEngine;
 public class AtackControl_1PJ : MonoBehaviour
 {
     private Mov_BTU MovPj;
+    private Animator Anim;
     private char NextAttack = 'N';
 
     public CircleCollider2D RadAtck;
@@ -12,22 +13,23 @@ public class AtackControl_1PJ : MonoBehaviour
     void Start()
     {
         MovPj = GetComponent<Mov_BTU>();
+        Anim = GetComponent<Animator>();
         RadAtck.enabled = false;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if((RadAtck.enabled == false) && (MovPj.AttackT || MovPj.AttackY))
+        if((RadAtck.enabled == false) && (MovPj.AttackT == true || MovPj.AttackY == true ) && (NextAttack == 'N'))
         {
             RadAtck.enabled = true;
             if (MovPj.AttackT)
             {
-                //animator
+                Anim.SetTrigger("FirstAttackT");
             }
             else
             {
-                //animator
+                Anim.SetTrigger("FirstAttackY");
             }
         }
         else if ((RadAtck.enabled == true) && (MovPj.AttackT || MovPj.AttackY) && (NextAttack == 'N'))
@@ -35,26 +37,20 @@ public class AtackControl_1PJ : MonoBehaviour
             if(MovPj.AttackT)
             {
                 NextAttack = 'T';
-                //animator
+                Anim.SetBool("NextAttackT", true);
             }
             else
             {
                 NextAttack = 'Y';
-                //animator
+                Anim.SetBool("NextAttackY", true);
             }
         }
         else if ((RadAtck.enabled == false) && (NextAttack != 'N'))
         {
             RadAtck.enabled = true;
-            if (NextAttack == 'T')
-            {
-                //animator
-            }
-            else
-            {
-                //animator
-            }
             NextAttack = 'N';
+            Anim.SetBool("NextAttackY", false);
+            Anim.SetBool("NextAttackT", false);
         }
     }
 
