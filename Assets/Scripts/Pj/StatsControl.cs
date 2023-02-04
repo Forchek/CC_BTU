@@ -9,7 +9,7 @@ public class StatsControl : MonoBehaviour
     public int MaxVida;
     public int Vida;
     public int Daño;
-    void Start()
+    void Awake()
     {
         MaxVida = 200;
         Vida = MaxVida;
