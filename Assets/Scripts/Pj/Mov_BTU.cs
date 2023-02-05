@@ -8,6 +8,7 @@ public class Mov_BTU : MonoBehaviour
     private Vector2 Mov = new Vector2(0, 0);
     private SpriteRenderer sr;
     private Animator Anim;
+    private Transform CameraPos;
     private bool jumping = false;
     private bool GoingUp = false;
     private float AlturaSalto = 0f;
@@ -20,12 +21,13 @@ public class Mov_BTU : MonoBehaviour
     public bool AttackY = false;
     public bool Hability = false;
     public bool Inmunity = false;
-    public Transform CameraPos;
+    public Transform PiesPj;
     // Start is called before the first frame update
     void Start()
     {
         sr = GetComponent<SpriteRenderer>();
         Anim = GetComponent<Animator>();
+        CameraPos = GameObject.FindGameObjectWithTag("MainCamera").transform;
     }
 
     // Update is called once per frame
@@ -152,20 +154,20 @@ public class Mov_BTU : MonoBehaviour
         }
 
         //Comprobar que no pase los limites
-        if (transform.position.x > (CameraPos.position.x + 8.3))
+        if (PiesPj.position.x > (CameraPos.position.x + 8.3))
         {
             transform.position = new Vector3(CameraPos.position.x + 8.3f, transform.position.y, transform.position.z);
         }
-        else if (transform.position.x <= (CameraPos.position.x - 8.3))
+        else if (PiesPj.position.x <= (CameraPos.position.x - 8.3))
         {
             transform.position = new Vector3(CameraPos.position.x - 8.3f, transform.position.y, transform.position.z);
         }
 
-        if (transform.position.y >= (CameraPos.position.y + 1.5) && (jumping == false))
+        if (PiesPj.position.y >= (CameraPos.position.y + 0.5) && (jumping == false))
         {
             transform.position = new Vector3(transform.position.x, CameraPos.position.y + 1.5f, transform.position.z);
         }
-        else if (transform.position.y <= (CameraPos.position.y - 4))
+        else if (PiesPj.position.y <= (CameraPos.position.y - 5))
         {
             transform.position = new Vector3(transform.position.x, CameraPos.position.y - 4f, transform.position.z);
         }
