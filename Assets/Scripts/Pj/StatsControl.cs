@@ -24,10 +24,11 @@ public class StatsControl : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag == "AtackEnemy")
+        if(collision.tag == "AttackEnemy")
         {
             if (Mov_Pj.Inmunity == false)
             {
+                Debug.Log("Golpeado");
                 Vida -= collision.GetComponent<StatsControl>().Daño;
             }
         }

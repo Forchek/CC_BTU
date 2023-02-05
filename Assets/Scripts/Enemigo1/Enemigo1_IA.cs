@@ -12,30 +12,43 @@ public class Enemigo1_IA : MonoBehaviour
     private Vector2 Mov;
     private Vector2 PosObj;
     private Vector3 LocScale;
+
+    //Ataque
     private bool Attacking = false;
     private int FreqAttack;
     private float TimeElapsed = 0f;
     private float aux = 0f;
     private int TypeAttack;
     private bool TypeAttackDecided = false;
+
+    //Salto
     private bool jumping = false;
+    private bool GoingUp = true;
+    private float AlturaCaida = 0f;
 
     public Transform Pies;
+    public CircleCollider2D RadAtck;
+    public CircleCollider2D CollPies;
     // Start is called before the first frame update
     void Start()
     {
         Player = GameObject.FindGameObjectWithTag("Player").transform;
         CameraPos = GameObject.FindGameObjectWithTag("MainCamera").transform;
-        FreqAttack = Random.Range(5, 10);
-        InvokeRepeating("Attack", 15, FreqAttack);
+        FreqAttack = Random.Range(5, 11);
+        InvokeRepeating("Attack", 0, FreqAttack);
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        Moving();
+        SetDirection();
+        transform.Translate(Mov.normalized * speed * Time.deltaTime);
         Flip();
-        CheckLimits();
+        if(JustInvoked == false)
+        {
+            CheckLimits();
+        }
+
     }
 
     private void CheckLimits()
@@ -60,7 +73,7 @@ public class Enemigo1_IA : MonoBehaviour
         }
     }
 
-    private void Moving()
+    private void SetDirection()
     {
         //Nada mas aparecer se mete en pantalla y ataca con salto
         if (JustInvoked == true)
@@ -71,37 +84,41 @@ public class Enemigo1_IA : MonoBehaviour
             }
             else if (((CameraPos.position.x - 7f) - transform.position.x) > 0)
             {
+                Debug.Log("Entra en Pantalla");
                 Mov = Vector2.right;
             }
             else
             {
                 JustInvoked = false;
+                TypeAttack = 1;
+                Attack();
+                Debug.Log("Ha entrado en pantalla");
                 //Lanzar animacion de ataque salto
             }
-            transform.Translate(Mov * speed * Time.deltaTime);
         }
         //Movimientos antes de pegar
-        if((JustInvoked == false) && (Attacking == false))
+        if ((JustInvoked == false) && (Attacking == false))
         {
             //Primero se mueve un poco aleatorio
-            if(TimeElapsed < FreqAttack - 2)
+            if (TimeElapsed < FreqAttack - 1f)
             {
-                if(TimeElapsed >= (1.5f * aux))
+                if (TimeElapsed >= (1.5f * aux))
                 {
+                    Debug.Log("Mov Aleatorio");
                     aux += 1.0f;
                     Mov.x = Random.Range(-1f, 1f);
                     Mov.y = Random.Range(-1f, 1f);
                 }
-                transform.Translate(Mov.normalized * speed * Time.deltaTime);
             }
             else
             {
-                if(TypeAttackDecided == false)
+                //Para que solo decida el ataque y a donde moverse la primera vez que entre aqui
+                if (TypeAttackDecided == false)
                 {
                     TypeAttackDecided = true;
                     TypeAttack = Random.Range(0, 2);
                     PosObj.y = Player.position.y;
-                    Debug.Log(TypeAttack);
+                    Debug.Log("Tipo de ataque: " + TypeAttack);
                     //Puñetazo
                     if (TypeAttack == 0)
                     {
@@ -129,12 +146,71 @@ public class Enemigo1_IA : MonoBehaviour
                         }
                     }
                 }
-                transform.position = Vector2.Lerp(new Vector2(transform.position.x, transform.position.y), PosObj, Time.deltaTime);
+                Mov = new Vector2(PosObj.x - transform.position.x, PosObj.y - transform.position.y);
+                Debug.Log("Dirigiendose para atacar: " + Mov.sqrMagnitude);
+                if (Mov.sqrMagnitude <= 0.5f)
+                {
+                    Debug.Log("hemos llegao");
+                    Mov = new Vector2(0f, 0f);
+                }
             }
-            //Cuando se acerca el momento de atacar decice si acercarse para puñetazo o alejarse para patada
-            TimeElapsed += Time.deltaTime;
         }
-        
+        else if (Attacking == true)
+        {
+            //Puñetazo
+            if (TypeAttack == 0)
+            {
+                Debug.Log("Ataca de puño");
+                //animacion puñetazo, lo del attacking false tiene que llamarse desde la animacion
+                Attacking = false;
+                RadAtck.enabled = false;
+            }
+            else
+            {
+                Debug.Log("Ataca de patada");
+                //animacion patada
+                jumping = true;
+                CollPies.enabled = false;
+                float LongS;
+                if(Player.position.x > transform.position.x)
+                {
+                    LongS = 1.5f;
+                }
+                else
+                {
+                    LongS = -1.5f;
+                }
+                AttackJump(1f, LongS, AlturaCaida);
+            }
+        }
+
+        TimeElapsed += Time.deltaTime;
+    }
+
+    private void AttackJump(float AlturaSalto, float LongSalto, float PosCaida)
+    {
+        if (GoingUp == true)
+        {
+            Debug.Log("Subiendo");
+            Mov = new Vector2(LongSalto, AlturaSalto);
+            if (transform.position.y >= (PosCaida + AlturaSalto))
+            {
+                GoingUp = false;
+            }
+        }
+        else
+        {
+            Debug.Log("Bajando");
+            Mov = new Vector2(LongSalto, -AlturaSalto);
+            if (transform.position.y <= PosCaida)
+            {
+                jumping = false;
+                RadAtck.enabled = false;
+                Attacking = false;
+                CollPies.enabled = true;
+                Debug.Log("En el suelo");
+            }
+        }
     }
 
     private void Flip()
@@ -157,13 +233,13 @@ public class Enemigo1_IA : MonoBehaviour
 
     private void Attack()
     {
+        Debug.Log("Hora de Atacar");
+        RadAtck.enabled = true;
         aux = 0f;
         TimeElapsed = 0f;
         TypeAttackDecided = false;
-        //Decidir que ataque hacer
-        if ((JustInvoked == false) && (Attacking == false))
-        {
-
-        }
+        Attacking = true;
+        GoingUp = true;
+        AlturaCaida = transform.position.y;
     }
 }
