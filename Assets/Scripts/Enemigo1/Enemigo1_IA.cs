@@ -7,7 +7,7 @@ public class Enemigo1_IA : MonoBehaviour
     private Transform Player;
     private Transform CameraPos;
     private bool JustInvoked = true;
-    private int speed = 5;
+    private int speed = 2;
     private bool FacingRight = true;
     private Vector2 Mov;
     private Vector2 PosObj;
@@ -34,8 +34,7 @@ public class Enemigo1_IA : MonoBehaviour
     {
         Player = GameObject.FindGameObjectWithTag("Player").transform;
         CameraPos = GameObject.FindGameObjectWithTag("MainCamera").transform;
-        FreqAttack = Random.Range(5, 11);
-        InvokeRepeating("Attack", 0, FreqAttack);
+        Debug.Log("InicioPrueba: " + Time.time);
     }
 
     // Update is called once per frame
@@ -48,9 +47,14 @@ public class Enemigo1_IA : MonoBehaviour
         {
             CheckLimits();
         }
-
     }
-
+    private void Update()
+    {
+        if(Mathf.Abs(transform.position.x - (-11f)) <= 0.05)
+        {
+            Debug.Log("FinPrueba: " + Time.time);
+        }
+    }
     private void CheckLimits()
     {
         //Comprobar que no pase los limites
@@ -93,68 +97,11 @@ public class Enemigo1_IA : MonoBehaviour
                 TypeAttack = 1;
                 Attack();
                 Debug.Log("Ha entrado en pantalla");
+                StartCoroutine("DecideAction");
                 //Lanzar animacion de ataque salto
             }
         }
-        //Movimientos antes de pegar
-        if ((JustInvoked == false) && (Attacking == false))
-        {
-            //Primero se mueve un poco aleatorio
-            if (TimeElapsed < FreqAttack - 1f)
-            {
-                if (TimeElapsed >= (1.5f * aux))
-                {
-                    Debug.Log("Mov Aleatorio");
-                    aux += 1.0f;
-                    Mov.x = Random.Range(-1f, 1f);
-                    Mov.y = Random.Range(-1f, 1f);
-                }
-            }
-            else
-            {
-                //Para que solo decida el ataque y a donde moverse la primera vez que entre aqui
-                if (TypeAttackDecided == false)
-                {
-                    TypeAttackDecided = true;
-                    TypeAttack = Random.Range(0, 2);
-                    PosObj.y = Player.position.y;
-                    Debug.Log("Tipo de ataque: " + TypeAttack);
-                    //Puñetazo
-                    if (TypeAttack == 0)
-                    {
-                        //tengo el Player a la derecha o la izquierda
-                        if ((Player.position.x - transform.position.x) < 0)
-                        {
-                            PosObj.x = Player.position.x + 0.75f;
-                        }
-                        else
-                        {
-                            PosObj.x = Player.position.x - 0.75f;
-                        }
-                    }
-                    //Patada
-                    else
-                    {
-                        //tengo el Player a la derecha o la izquierda
-                        if ((Player.position.x - transform.position.x) < 0)
-                        {
-                            PosObj.x = Player.position.x + 3f;
-                        }
-                        else
-                        {
-                            PosObj.x = Player.position.x - 3;
-                        }
-                    }
-                }
-                Mov = new Vector2(PosObj.x - transform.position.x, PosObj.y - transform.position.y);
-                Debug.Log("Dirigiendose para atacar: " + Mov.sqrMagnitude);
-                if (Mov.sqrMagnitude <= 0.5f)
-                {
-                    Debug.Log("hemos llegao");
-                    Mov = new Vector2(0f, 0f);
-                }
-            }
-        }
+        
         else if (Attacking == true)
         {
             //Puñetazo
@@ -183,12 +130,11 @@ public class Enemigo1_IA : MonoBehaviour
                 AttackJump(1f, LongS, AlturaCaida);
             }
         }
-
-        TimeElapsed += Time.deltaTime;
     }
 
     private void AttackJump(float AlturaSalto, float LongSalto, float PosCaida)
     {
+        speed = 4;
         if (GoingUp == true)
         {
             Debug.Log("Subiendo");
@@ -235,11 +181,82 @@ public class Enemigo1_IA : MonoBehaviour
     {
         Debug.Log("Hora de Atacar");
         RadAtck.enabled = true;
-        aux = 0f;
-        TimeElapsed = 0f;
-        TypeAttackDecided = false;
         Attacking = true;
         GoingUp = true;
         AlturaCaida = transform.position.y;
     }
+
+    private IEnumerator DecideAction()
+    {
+        while(true)
+        {
+            if(Attacking == false)
+            {
+                FreqAttack = Random.Range(5, 11);
+                Debug.Log("Nuevo tiempo entre ataques: " + FreqAttack);
+                for (TimeElapsed = 0; TimeElapsed < (FreqAttack - 1); TimeElapsed++)
+                {
+                    speed = Random.Range(2, 5);
+                    if (Random.Range(0, 4) == 0)
+                    {
+                        Mov = new Vector2(0, 0);
+                    }
+                    else
+                    {
+                        Debug.Log("Mov Aleatorio");
+                        Mov.x = Random.Range(-1f, 1f);
+                        Mov.y = Random.Range(-1f, 1f);
+                    }
+                    yield return new WaitForSeconds(1);
+                }
+
+                TypeAttack = Random.Range(0, 2);
+                PosObj.y = Player.position.y;
+                Debug.Log("Tipo de ataque: " + TypeAttack);
+                //Puñetazo
+                if (TypeAttack == 0)
+                {
+                    //tengo el Player a la derecha o la izquierda
+                    if ((Player.position.x - transform.position.x) < 0)
+                    {
+                        PosObj.x = Player.position.x + 0.75f;
+                    }
+                    else
+                    {
+                        PosObj.x = Player.position.x - 0.75f;
+                    }
+                }
+                //Patada
+                else
+                {
+                    //tengo el Player a la derecha o la izquierda
+                    if ((Player.position.x - transform.position.x) < 0)
+                    {
+                        PosObj.x = Player.position.x + 3f;
+                    }
+                    else
+                    {
+                        PosObj.x = Player.position.x - 3;
+                    }
+                }
+
+                Mov = new Vector2(PosObj.x - transform.position.x, PosObj.y - transform.position.y);
+                Debug.Log("Dirigiendose para atacar: " + Mov.sqrMagnitude);
+
+                TimeElapsed = 0;
+                while ((((Vector2)transform.position - PosObj).sqrMagnitude > 0.1) && TimeElapsed <= 5f)
+                {
+                    TimeElapsed += 0.1f;
+                    yield return new WaitForSeconds(0.1f);
+                }
+                Attack();
+            }
+            else
+            {
+                yield return new WaitForSeconds(0.1f);
+            }
+            
+        }
+    }
+
 }

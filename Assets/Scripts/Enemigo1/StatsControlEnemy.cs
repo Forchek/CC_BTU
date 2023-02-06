@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StatsControl : MonoBehaviour
+public class StatsControlEnemy : MonoBehaviour
 {
     private Mov_BTU Mov_Pj;
     // Start is called before the first frame update
@@ -29,7 +29,7 @@ public class StatsControl : MonoBehaviour
             if (Mov_Pj.Inmunity == false)
             {
                 Debug.Log("Golpeado");
-                Vida -= collision.GetComponentInParent<StatsControlEnemy>().Daño;
+                Vida -= collision.GetComponentInParent<StatsControl>().Daño;
             }
         }
     }
