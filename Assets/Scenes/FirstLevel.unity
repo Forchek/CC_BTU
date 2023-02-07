@@ -664,6 +664,7 @@ GameObject:
   - component: {fileID: 688131514}
   - component: {fileID: 688131515}
   - component: {fileID: 688131516}
+  - component: {fileID: 688131517}
   m_Layer: 0
   m_Name: Enemigo
   m_TagString: Enemigo
@@ -833,6 +834,26 @@ MonoBehaviour:
   MaxVida: 0
   Vida: 0
   "Da\xF1o": 0
+--- !u!95 &688131517
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 688131509}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 54123a6ef4b2e0e4589faf5f4fd9936a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!1 &793320841
 GameObject:
   m_ObjectHideFlags: 0
