@@ -13,18 +13,20 @@ public class Enemigo1_IA : MonoBehaviour
     private Vector2 PosObj;
     private Vector3 LocScale;
 
+    private Animator Anim;
+
     //Ataque
     private bool Attacking = false;
     private int FreqAttack;
     private float TimeElapsed = 0f;
-    private float aux = 0f;
     private int TypeAttack;
-    private bool TypeAttackDecided = false;
 
     //Salto
     private bool jumping = false;
     private bool GoingUp = true;
     private float AlturaCaida = 0f;
+    private float LongS;
+    private float AlturaSalto = 1f;
 
     public Transform Pies;
     public CircleCollider2D RadAtck;
@@ -34,6 +36,7 @@ public class Enemigo1_IA : MonoBehaviour
     {
         Player = GameObject.FindGameObjectWithTag("Player").transform;
         CameraPos = GameObject.FindGameObjectWithTag("MainCamera").transform;
+        Anim = GetComponent<Animator>();
         Debug.Log("InicioPrueba: " + Time.time);
     }
 
@@ -101,61 +104,35 @@ public class Enemigo1_IA : MonoBehaviour
                 //Lanzar animacion de ataque salto
             }
         }
-        
-        else if (Attacking == true)
+    }
+
+    private IEnumerator AttackJump()
+    {
+        speed = 4;
+        while(jumping == true)
         {
-            //Puñetazo
-            if (TypeAttack == 0)
+            if (GoingUp == true)
             {
-                Debug.Log("Ataca de puño");
-                //animacion puñetazo, lo del attacking false tiene que llamarse desde la animacion
-                Attacking = false;
-                RadAtck.enabled = false;
+                Debug.Log("Subiendo");
+                Mov = new Vector2(LongS, AlturaSalto);
+                if (transform.position.y >= (AlturaCaida + AlturaSalto))
+                {
+                    GoingUp = false;
+                }
             }
             else
             {
-                Debug.Log("Ataca de patada");
-                //animacion patada
-                jumping = true;
-                CollPies.enabled = false;
-                float LongS;
-                if(Player.position.x > transform.position.x)
+                Debug.Log("Bajando");
+                Mov = new Vector2(LongS, -AlturaSalto);
+                if (transform.position.y <= AlturaCaida)
                 {
-                    LongS = 1.5f;
+                    jumping = false;
+                    CollPies.enabled = true;
+                    Debug.Log("En el suelo");
                 }
-                else
-                {
-                    LongS = -1.5f;
-                }
-                AttackJump(1f, LongS, AlturaCaida);
             }
-        }
-    }
 
-    private void AttackJump(float AlturaSalto, float LongSalto, float PosCaida)
-    {
-        speed = 4;
-        if (GoingUp == true)
-        {
-            Debug.Log("Subiendo");
-            Mov = new Vector2(LongSalto, AlturaSalto);
-            if (transform.position.y >= (PosCaida + AlturaSalto))
-            {
-                GoingUp = false;
-            }
-        }
-        else
-        {
-            Debug.Log("Bajando");
-            Mov = new Vector2(LongSalto, -AlturaSalto);
-            if (transform.position.y <= PosCaida)
-            {
-                jumping = false;
-                RadAtck.enabled = false;
-                Attacking = false;
-                CollPies.enabled = true;
-                Debug.Log("En el suelo");
-            }
+            yield return new WaitForFixedUpdate();
         }
     }
 
@@ -184,6 +161,26 @@ public class Enemigo1_IA : MonoBehaviour
         Attacking = true;
         GoingUp = true;
         AlturaCaida = transform.position.y;
+        Mov = new Vector2(0, 0);
+        if (TypeAttack == 0)
+        {
+            Anim.SetTrigger("Puñetazo");
+        }
+        else
+        {
+            Anim.SetTrigger("Patazo");
+            jumping = true;
+            CollPies.enabled = false;
+            if (Player.position.x > transform.position.x)
+            {
+                LongS = 1.5f;
+            }
+            else
+            {
+                LongS = -1.5f;
+            }
+            StartCoroutine("AttackJump");
+        }
     }
 
     private IEnumerator DecideAction()
@@ -257,6 +254,12 @@ public class Enemigo1_IA : MonoBehaviour
             }
             
         }
+    }
+
+    void EndAttack()
+    {
+        RadAtck.enabled = false;
+        Attacking = false;
     }
 
 }
