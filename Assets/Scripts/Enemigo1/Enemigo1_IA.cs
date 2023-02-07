@@ -37,7 +37,6 @@ public class Enemigo1_IA : MonoBehaviour
         Player = GameObject.FindGameObjectWithTag("Player").transform;
         CameraPos = GameObject.FindGameObjectWithTag("MainCamera").transform;
         Anim = GetComponent<Animator>();
-        Debug.Log("InicioPrueba: " + Time.time);
     }
 
     // Update is called once per frame
@@ -49,13 +48,6 @@ public class Enemigo1_IA : MonoBehaviour
         if(JustInvoked == false)
         {
             CheckLimits();
-        }
-    }
-    private void Update()
-    {
-        if(Mathf.Abs(transform.position.x - (-11f)) <= 0.05)
-        {
-            Debug.Log("FinPrueba: " + Time.time);
         }
     }
     private void CheckLimits()
@@ -91,7 +83,6 @@ public class Enemigo1_IA : MonoBehaviour
             }
             else if (((CameraPos.position.x - 7f) - transform.position.x) > 0)
             {
-                Debug.Log("Entra en Pantalla");
                 Mov = Vector2.right;
             }
             else
@@ -99,7 +90,6 @@ public class Enemigo1_IA : MonoBehaviour
                 JustInvoked = false;
                 TypeAttack = 1;
                 Attack();
-                Debug.Log("Ha entrado en pantalla");
                 StartCoroutine("DecideAction");
                 //Lanzar animacion de ataque salto
             }
@@ -113,7 +103,6 @@ public class Enemigo1_IA : MonoBehaviour
         {
             if (GoingUp == true)
             {
-                Debug.Log("Subiendo");
                 Mov = new Vector2(LongS, AlturaSalto);
                 if (transform.position.y >= (AlturaCaida + AlturaSalto))
                 {
@@ -122,13 +111,11 @@ public class Enemigo1_IA : MonoBehaviour
             }
             else
             {
-                Debug.Log("Bajando");
                 Mov = new Vector2(LongS, -AlturaSalto);
                 if (transform.position.y <= AlturaCaida)
                 {
                     jumping = false;
                     CollPies.enabled = true;
-                    Debug.Log("En el suelo");
                 }
             }
 
@@ -190,7 +177,6 @@ public class Enemigo1_IA : MonoBehaviour
             if(Attacking == false)
             {
                 FreqAttack = Random.Range(5, 11);
-                Debug.Log("Nuevo tiempo entre ataques: " + FreqAttack);
                 for (TimeElapsed = 0; TimeElapsed < (FreqAttack - 1); TimeElapsed++)
                 {
                     speed = Random.Range(2, 5);
@@ -200,7 +186,6 @@ public class Enemigo1_IA : MonoBehaviour
                     }
                     else
                     {
-                        Debug.Log("Mov Aleatorio");
                         Mov.x = Random.Range(-1f, 1f);
                         Mov.y = Random.Range(-1f, 1f);
                     }
@@ -238,7 +223,10 @@ public class Enemigo1_IA : MonoBehaviour
                 }
 
                 Mov = new Vector2(PosObj.x - transform.position.x, PosObj.y - transform.position.y);
-                Debug.Log("Dirigiendose para atacar: " + Mov.sqrMagnitude);
+                Debug.Log("Dirigiendose para atacar");
+                Debug.Log("Pos Player: " + PosObj);
+                Debug.Log("Pos Enemigo: " + transform.position);
+                Debug.Log("Recta entre ambos: " + new Vector2(PosObj.x - transform.position.x, PosObj.y - transform.position.y));
 
                 TimeElapsed = 0;
                 while ((((Vector2)transform.position - PosObj).sqrMagnitude > 0.1) && TimeElapsed <= 5f)
