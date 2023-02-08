@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class StatsControlEnemy : MonoBehaviour
 {
-    private Mov_BTU Mov_Pj;
+    private Enemigo1_IA EnemIA;
+    private GameManager gameManager;
     // Start is called before the first frame update
     public int MaxVida;
     public int Vida;
@@ -15,21 +16,27 @@ public class StatsControlEnemy : MonoBehaviour
         Vida = MaxVida;
         Daño = 30;
     }
-
+    private void Start()
+    {
+        EnemIA = GetComponent<Enemigo1_IA>();
+        gameManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
+    }
     // Update is called once per frame
     void Update()
     {
-        Mov_Pj = GetComponent<Mov_BTU>();
+       
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag == "AttackEnemy")
+        if(collision.tag == "AttackPlayer")
         {
-            if (Mov_Pj.Inmunity == false)
+            if (EnemIA.Inmunity == false)
             {
-                Debug.Log("Golpeado");
+                Debug.Log("GolpeadoPorPlayer");
                 Vida -= collision.GetComponentInParent<StatsControl>().Daño;
+                gameManager.EnemigoEliminado();
+                Destroy(gameObject);
             }
         }
     }

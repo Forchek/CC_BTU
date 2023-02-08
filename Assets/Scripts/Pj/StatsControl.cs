@@ -15,7 +15,7 @@ public class StatsControl : MonoBehaviour
         Vida = MaxVida;
         Daño = 30;
     }
-
+    
     // Update is called once per frame
     void Update()
     {
