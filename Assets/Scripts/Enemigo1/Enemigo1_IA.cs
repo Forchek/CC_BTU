@@ -31,6 +31,8 @@ public class Enemigo1_IA : MonoBehaviour
     public Transform Pies;
     public CircleCollider2D RadAtck;
     public CircleCollider2D CollPies;
+
+    public bool Inmunity = false;
     // Start is called before the first frame update
     void Start()
     {
